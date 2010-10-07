@@ -59,7 +59,8 @@ define sudo::sudoers_line ($line) {
 #
 # Parameters:
 #   $name - The name variable. This user/group will be granted sudo access.
-#     If the name starts with a '%', it refers to a group, otherwise a user.
+#     If the name starts with a '%', it refers to a group, otherwise a user. It
+#     will also be part of the file name.
 #
 #   $users - The list of users that $name is allowed to 'impersonate' with
 #     sudo.  Default: "ALL".
@@ -86,8 +87,35 @@ define sudo::sudoer ($users="ALL", $commands="ALL", $password=true) {
     $users_str = inline_template("<%= if users.is_a?(String) then users; else users.join(',') end %>")
     $commands_str = inline_template("<%= if commands.is_a?(String) then commands; else commands.join(',') end %>")
 
-    sudoers_line { "${name}_sudo":
+    sudoers_line { "${name}_sudoer":
         line    => "${name} ALL=(${users_str}) ${passwd}${commands_str}",
+        require => File['sudoers.d']
+    }
+}
+
+# Define: sudo::default
+#
+# Defines defaults for sudo
+#
+# Parameters:
+#   $name - The name variable. Only used as a part of the file name.
+#
+#   $option - The option to give to defaults. May be a string or an array of strings.
+#
+#   $sudoers - The list of sudoers this default applies to. If none given, then
+#     the default is global. May be a string or an array of strings. Sudoers
+#     with % before their name refer to groups.
+#
+define sudo::default ($option, $sudoers="") {
+    # Hack hack - http://projects.puppetlabs.com/issues/show/2990
+    $sudoers_str = $sudoers ? {
+        ""      => "",
+        default => inline_template("<%= if sudoers.is_a?(String) then (':'+sudoers); else (':'+sudoers.join(',')) end %>")
+    }
+    $option_str = inline_template("<%= if option.is_a?(String) then option; else option.join(',') end %>")
+
+    sudoers_line { "${name}_default":
+        line    => "Defaults${sudoers_str} ${option_str}",
         require => File['sudoers.d']
     }
 }
