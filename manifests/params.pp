@@ -18,6 +18,7 @@ class sudo::params {
             '5_5'     => '1.7.2p1-8.el5_5',
             'default' => 'latest',
         },
+        default => '',
     }
 
 }
