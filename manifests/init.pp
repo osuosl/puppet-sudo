@@ -7,6 +7,7 @@
 #   include sudo
 #
 class sudo {
+    include concat::setup
 
     require sudo::params
 
@@ -15,30 +16,21 @@ class sudo {
         ensure => "${params::package_version}",
     }
 
-    file { 'sudoers':
-        ensure => 'present',
-        path    => '/etc/sudoers',
-        content => "#includedir /etc/sudoers.d\n",
-        mode    => '440',
+    concat { 'sudoers':
+        name => '/etc/sudoers',
+        owner => root,
+        group => root,
+        mode => 440,
         require => Package['sudo'],
-    }
-
-    file { 'sudoers.d':
-        path    => '/etc/sudoers.d',
-        ensure  => 'directory',
-        recurse => true,
-        purge   => true,
-        force   => true,
     }
 }
 
 # Define: sudo::sudoer_line
 #
-# Adds a file with $line as its content to /etc/sudoers.d/ , which will then be
-# used by the sudo config.
+# Adds a line to /etc/sudoers via concat.
 #
 # This is lower level than will be used on individual nodes, and some smarter
-# wrappers are provided. Instead consider using sudo::sudoer and sudo::default.
+# wrappers are provided. Consider using sudo::sudoer and sudo::default.
 #
 # Parameters
 #   $line - The line to put in sudoers.
@@ -51,12 +43,10 @@ class sudo {
 #
 define sudo::sudoers_line ($line) {
 
-    file { "$name":
-        ensure => 'present',
-        path => "/etc/sudoers.d/$name",
+    concat::fragment { "$name":
+        target => "sudoers",
         content => "${line}\n",
-        mode => '440',
-        require => File['sudoers.d']
+        require => Concat['sudoers'],
     }
 }
 
