@@ -43,9 +43,8 @@ class sudo {
 define sudo::sudoers_line ($line) {
 
     concat::fragment { "$name":
-        target => "sudoers",
+        target => "${sudo::params::sudoers_file}",
         content => "${line}\n",
-        require => Concat["${sudo::params::sudoers_file}"],
     }
 }
 
