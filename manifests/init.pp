@@ -13,11 +13,10 @@ class sudo {
 
     package { 'sudo':
         name   => "${params::package_name}",
-        ensure => "${params::package_version}",
+        ensure => present,
     }
 
-    concat { 'sudoers':
-        name => '/etc/sudoers',
+    concat { "${sudo::params::sudoers_file}":
         owner => root,
         group => root,
         mode => 440,
@@ -46,7 +45,7 @@ define sudo::sudoers_line ($line) {
     concat::fragment { "$name":
         target => "sudoers",
         content => "${line}\n",
-        require => Concat['sudoers'],
+        require => Concat["${sudo::params::sudoers_file}"],
     }
 }
 
