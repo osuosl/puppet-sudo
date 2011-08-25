@@ -8,8 +8,7 @@
 #
 class sudo {
     include concat::setup
-
-    require sudo::params
+    include sudo::params
 
     package { 'sudo':
         name   => "${params::package_name}",
