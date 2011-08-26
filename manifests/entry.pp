@@ -30,7 +30,7 @@ define sudo::entry (
     } else {
         $cmd = "$alias_name"
     }
-    sudo::conf { "sudo_entry_${name}":
+    sudo::conf { "${name}":
         ensure  => $ensure,
         content => template("sudo/sudoers.entry.erb"),
     }
