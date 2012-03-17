@@ -21,6 +21,6 @@ define sudo::sudoers_line ($line) {
         ensure  => present,
         path    => "/etc/sudoers.d/${name}",
         content => "${line}\n",
-        mode    => 400,
+        mode    => 440,
     }
 }
