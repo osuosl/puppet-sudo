@@ -1,9 +1,12 @@
-#Class: sudo::absent
+# Class: sudo::absent
 #
 # Removes the sudo package
 #
-#Usage:
-#include sudo::absent
+# Usage:
+#   include sudo::absent
+#
 class sudo::absent inherits sudo {
-
-  Package['sudo'] { ensure => absent, }
+    Package['sudo'] {
+        ensure => absent,
+    }
+}
