@@ -16,7 +16,7 @@ class sudo::standard inherits sudo {
 
     # Give root and %wheel sudo access.
     sudo::sudoer {
-        "root":;
-        "%wheel":
+        'root':;
+        '%wheel':;
     }
 }

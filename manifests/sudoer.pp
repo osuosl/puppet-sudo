@@ -29,9 +29,9 @@ define sudo::sudoer ($users="ALL", $commands="ALL", $password=true) {
     }
 
     $user_str = join($users, ',')
-    $command_str = join($users, ',')
+    $command_str = join($commands, ',')
 
     sudoers_line { "${name}_sudoer":
-        line    => "${name} ALL=(${users_str}) ${passwd}${commands_str}",
+        line    => "${name} ALL=(${user_str}) ${passwd}${command_str}",
     }
 }

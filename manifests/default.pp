@@ -28,14 +28,8 @@
 #   }
 #
 define sudo::default ($option, $sudoers="") {
-    # Hack hack - http://projects.puppetlabs.com/issues/show/2990
-    $sudoers_str = $sudoers ? {
-        ""      => "",
-        default => inline_template(
-            "<%= if sudoers.is_a?(String) then (':'+sudoers); else (':'+sudoers.join(',')) end %>"
-        )
-    }
-    $option_str = inline_template("<%= if option.is_a?(String) then option; else option.join(',') end %>")
+    $sudoers_str = join($sudoers, ',')
+    $option_str = join($option, ',')
 
     sudoers_line { "${name}_default":
         line    => "Defaults${sudoers_str} ${option_str}",
