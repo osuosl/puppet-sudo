@@ -27,9 +27,9 @@ define sudo::sudoer ($users="ALL", $commands="ALL", $password=true) {
         false   => "NOPASSWD:",
         default => "PASSWD:",
     }
-    # Hack hack - http://projects.puppetlabs.com/issues/show/2990
-    $users_str = inline_template("<%= if users.is_a?(String) then users; else users.join(',') end %>")
-    $commands_str = inline_template("<%= if commands.is_a?(String) then commands; else commands.join(',') end %>")
+
+    $user_str = join($users, ',')
+    $command_str = join($users, ',')
 
     sudoers_line { "${name}_sudoer":
         line    => "${name} ALL=(${users_str}) ${passwd}${commands_str}",
