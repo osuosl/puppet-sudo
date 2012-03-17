@@ -20,13 +20,12 @@ class sudo {
             path    => '/etc/sudoers',
             content => '#includedir /etc/sudoers.d\n',
             mode    => 400,
-            require => Package['sudo'],
+            require => Package['sudo'];
         'sudoers.d':
             path    => '/etc/sudoers.d',
             ensure  => directory,
             recurse => true,
             purge   => true,
-            force   => true,
+            force   => true;
     }
 }
-
