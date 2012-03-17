@@ -18,7 +18,7 @@ class sudo {
         'sudoers':
             ensure  => present,
             path    => '/etc/sudoers',
-            content => '#includedir /etc/sudoers.d\n',
+            content => "#includedir /etc/sudoers.d\n",
             mode    => 400,
             require => Package['sudo'];
         'sudoers.d':
